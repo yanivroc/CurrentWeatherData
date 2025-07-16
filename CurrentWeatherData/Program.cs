@@ -5,6 +5,35 @@ using Microsoft.Win32;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Define a CORS policy name
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+// Configure CORS Services using appsettings
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          // Read allowed origins from configuration
+                          var allowedOrigins = builder.Configuration.GetValue<string>("CorsSettings:AllowedOrigins")?.Split(',', StringSplitOptions.RemoveEmptyEntries);
+
+                          if (allowedOrigins != null && allowedOrigins.Length > 0)
+                          {
+                              policy.WithOrigins(allowedOrigins)
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                          }
+                          else
+                          {
+                              // Fallback or log a warning if no origins are configured
+                              // For development, you might allow any origin if not specified, but be cautious.
+                              policy.AllowAnyOrigin() // WARNING: Use with caution in production
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod();
+                          }
+                      });
+});
+
 // Configure IOptions<WeatherSettings> by binding the "Weather" section
 builder.Services.Configure<WeatherSettings>(builder.Configuration.GetSection("WeatherSettings"));
 
@@ -34,6 +63,9 @@ if (app.Environment.IsDevelopment())
     // Use the developer exception page for detailed error information in development
     app.UseDeveloperExceptionPage();
 }
+
+// Use CORS middleware
+app.UseCors(MyAllowSpecificOrigins);
 
 // Redirect HTTP requests to HTTPS for security
 app.UseHttpsRedirection();

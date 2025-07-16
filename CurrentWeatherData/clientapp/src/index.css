@@ -1,13 +1,141 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Import Google Fonts for Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif; /* Use Inter as the primary font */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: linear-gradient(to bottom right, #60a5fa, #a78bfa); /* Gradient background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1rem;
 }
+
+#root {
+    width: 100%;
+    max-width: 480px; /* Max width for the app container */
+}
+
+/* Basic styling for the main app container */
+.weather-app-container {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 1rem; /* Rounded corners */
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); /* Shadow */
+    width: 100%;
+}
+
+.app-title {
+    font-size: 2rem;
+    font-weight: 700; /* Bold */
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+/* Form styling */
+.input-group {
+    margin-bottom: 1rem;
+}
+
+.input-label {
+    display: block;
+    color: #555;
+    font-size: 0.875rem; /* Small text */
+    font-weight: 500; /* Medium weight */
+    margin-bottom: 0.5rem;
+}
+
+.text-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+    .text-input:focus {
+        outline: none;
+        border-color: #3b82f6; /* Blue focus border */
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25); /* Blue focus ring */
+    }
+
+.submit-button {
+    width: 100%;
+    background-color: #2563eb; /* Darker blue */
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600; /* Semi-bold */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+    .submit-button:hover {
+        background-color: #1d4ed8; /* Even darker blue on hover */
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-button:disabled {
+        background-color: #9ca3af; /* Gray when disabled */
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+/* Messages (loading, error) */
+.loading-message {
+    text-align: center;
+    color: #2563eb;
+    font-weight: 500;
+    margin-top: 1.5rem;
+}
+
+.error-message {
+    background-color: #fee2e2; /* Light red background */
+    border: 1px solid #ef4444; /* Red border */
+    color: #b91c1c; /* Dark red text */
+    padding: 1rem;
+    border-radius: 0.5rem;
+    position: relative;
+    margin-top: 1.5rem;
+}
+
+    .error-message strong {
+        font-weight: 700;
+        margin-right: 0.5rem;
+    }
+
+/* Weather result display */
+.weather-result {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: #eff6ff; /* Light blue background */
+    border-radius: 0.5rem;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* Inner shadow */
+}
+
+.weather-result-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1e40af; /* Darker blue text */
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.weather-info-item {
+    color: #4b5563; /* Gray text */
+    line-height: 1.5;
+}
+
+    .weather-info-item span {
+        font-weight: 500;
+    }
