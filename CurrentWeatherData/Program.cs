@@ -23,14 +23,6 @@ builder.Services.AddCors(options =>
                                     .AllowAnyHeader()
                                     .AllowAnyMethod();
                           }
-                          else
-                          {
-                              // Fallback or log a warning if no origins are configured
-                              // For development, you might allow any origin if not specified, but be cautious.
-                              policy.AllowAnyOrigin() // WARNING: Use with caution in production
-                                    .AllowAnyHeader()
-                                    .AllowAnyMethod();
-                          }
                       });
 });
 

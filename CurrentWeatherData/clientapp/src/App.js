@@ -10,6 +10,10 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    // State variables to hold the city and country that were actually queried for display
+    const [displayedCity, setDisplayedCity] = useState('');
+    const [displayedCountry, setDisplayedCountry] = useState('');
+
     // API host address and the API key using environment variables
     const API_HOST = process.env.REACT_APP_API_HOST;
     const API_KEY = process.env.REACT_APP_API_KEY;
@@ -20,9 +24,14 @@ const App = () => {
         setError(null); // Clear any previous errors
         setWeatherData(null); // Clear any previous weather data
 
+        // Store the current city and country before fetching
+        const currentCity = city;
+        const currentCountry = country;
+
         try {
             // Construct the API URL with city and country parameters
-            const url = `${API_HOST}/weather?city=${encodeURIComponent(city)}&country=${encodeURIComponent(country)}`;
+            // IMPORTANT: Use currentCity and currentCountry here
+            const url = `${API_HOST}/weather?city=${encodeURIComponent(currentCity)}&country=${encodeURIComponent(currentCountry)}`;
 
             // Make the fetch request, including the X-Api-Key header
             const response = await fetch(url, {
@@ -43,6 +52,14 @@ const App = () => {
             // Parse the JSON response
             const data = await response.json();
             setWeatherData(data); // Set the weather data
+
+            // Set the displayed city and country only after a successful fetch
+            setDisplayedCity(currentCity);
+            setDisplayedCountry(currentCountry);
+
+            // Clear input fields after successful data fetch
+            setCity('');
+            setCountry('');
         } catch (err) {
             // Catch and set any errors that occur during the fetch operation
             console.error('Error fetching weather data:', err);
@@ -91,7 +108,7 @@ const App = () => {
                     <input
                         type="text"
                         id="country"
-                        className="text-input" // Use new CSS class
+                        className="text-input"
                         value={country}
                         onChange={(e) => setCountry(e.target.value)}
                         placeholder="e.g., AU"
@@ -100,8 +117,8 @@ const App = () => {
                 </div>
                 <button
                     type="submit"
-                    className="submit-button" // Use new CSS class
-                    disabled={loading} // Disable button when loading
+                    className="submit-button"
+                    disabled={loading}
                 >
                     {loading ? 'Fetching Weather...' : 'Get Weather'}
                 </button>
@@ -109,20 +126,20 @@ const App = () => {
 
             {/* Display loading, error, or weather data */}
             {loading && (
-                <div className="loading-message">Loading weather data...</div> 
-      )}
+                <div className="loading-message">Loading weather data...</div>
+            )}
 
             {error && (
-                <div className="error-message" role="alert"> 
+                <div className="error-message" role="alert">
                     <strong>Error!</strong>
                     <span>{error}</span>
                 </div>
             )}
 
             {weatherData && (
-                <div className="weather-result"> 
-                    <h2 className="weather-result-title"> 
-                        Weather in {city}, {country}
+                <div className="weather-result">
+                    <h2 className="weather-result-title">
+                        Weather in {displayedCity}, {displayedCountry}
                     </h2>
                     <div>
                         <p className="weather-info-item">
