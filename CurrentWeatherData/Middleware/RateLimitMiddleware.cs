@@ -9,7 +9,7 @@ namespace CurrentWeatherData.Middleware
         private readonly ILogger<RateLimitMiddleware> _logger;
 
         // --- ADD THIS LINE to inject a time provider ---
-        private readonly TimeProvider _timeProvider; // System.TimeProvider
+        private readonly TimeProvider _timeProvider;
 
         // Custom API keys for your service.
         private readonly HashSet<string> _validApiKeys;
@@ -58,7 +58,7 @@ namespace CurrentWeatherData.Middleware
 
             ConcurrentQueue<DateTime> timestamps = _requestTimestamps.GetOrAdd(apiKey, _ => new ConcurrentQueue<DateTime>());
 
-            // --- CHANGE: Use _timeProvider.GetUtcNow() instead of DateTime.UtcNow ---
+            // Use _timeProvider.GetUtcNow() instead of DateTime.UtcNow
             DateTimeOffset now = _timeProvider.GetUtcNow();
             while (timestamps.TryPeek(out DateTime oldestTimestamp) && (now - oldestTimestamp) > RateLimitWindow)
             {
@@ -74,7 +74,7 @@ namespace CurrentWeatherData.Middleware
                 return;
             }
 
-            // --- CHANGE: Use now.UtcDateTime to enqueue the timestamp ---
+            // Use now.UtcDateTime to enqueue the timestamp
             timestamps.Enqueue(now.UtcDateTime);
             _logger.LogInformation($"API Key {apiKey} request count: {timestamps.Count}/{MaxRequestsPerHour}");
 
