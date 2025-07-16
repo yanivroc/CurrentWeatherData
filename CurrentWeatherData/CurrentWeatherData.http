@@ -2,5 +2,6 @@
 
 GET {{CurrentWeatherData_HostAddress}}/weatherforecast/
 Accept: application/json
+X-Api-Key: test-api-key-123
 
 ###
