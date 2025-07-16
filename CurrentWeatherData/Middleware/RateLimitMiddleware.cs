@@ -8,36 +8,27 @@ namespace CurrentWeatherData.Middleware
     {
         private readonly ILogger<RateLimitMiddleware> _logger;
 
-        // --- ADD THIS LINE to inject a time provider ---
+        // Inject a time provider
         private readonly TimeProvider _timeProvider;
 
-        // Custom API keys for your service.
+        // Custom API keys for your service
         private readonly HashSet<string> _validApiKeys;
 
-        // Stores request timestamps for each API key.
+        // Stores request timestamps for each API key
         private static readonly ConcurrentDictionary<string, ConcurrentQueue<DateTime>> _requestTimestamps = new ConcurrentDictionary<string, ConcurrentQueue<DateTime>>();
 
         private const int MaxRequestsPerHour = 5;
         private static readonly TimeSpan RateLimitWindow = TimeSpan.FromHours(1);
 
-        // --- UPDATE THE CONSTRUCTOR to accept the TimeProvider ---
         public RateLimitMiddleware(ILogger<RateLimitMiddleware> logger, IOptions<RateLimitSettings> options, TimeProvider timeProvider)
         {
             _logger = logger;
-            _timeProvider = timeProvider; // Assign the injected TimeProvider
+            _timeProvider = timeProvider;
             _validApiKeys = options.Value.ValidApiKeys;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (context.Request.Path.StartsWithSegments("/swagger") ||
-                context.Request.Path.StartsWithSegments("/index.html") ||
-                context.Request.Path.StartsWithSegments("/assets"))
-            {
-                await next(context);
-                return;
-            }
-
             string? apiKey = context.Request.Headers["X-Api-Key"].FirstOrDefault();
 
             if (string.IsNullOrEmpty(apiKey))
@@ -69,7 +60,7 @@ namespace CurrentWeatherData.Middleware
             {
                 _logger.LogWarning($"Rate limit exceeded for API Key: {apiKey}");
                 context.Response.StatusCode = StatusCodes.Status429TooManyRequests;
-                context.Response.Headers.Add("Retry-After", RateLimitWindow.TotalSeconds.ToString());
+                context.Response.Headers["Retry-After"] = RateLimitWindow.TotalSeconds.ToString();
                 await context.Response.WriteAsync("Hourly rate limit exceeded. Please try again later.");
                 return;
             }
