@@ -185,11 +185,3 @@ REACT_APP_API_KEY=test-api-key-123
 > For production builds, place these in `.env.production`.
 
 ---
-
-## License
-
-This project is licensed under the MIT License.
-
-```
-
----
